@@ -2,6 +2,8 @@
 
 namespace Dtc\GridBundle\Controller;
 
+use App\Entity\AdamasPerson;
+use App\Service\AdamasService;
 use Dtc\GridBundle\Grid\Renderer\AbstractRenderer;
 use Dtc\GridBundle\Util\CamelCaseTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -118,6 +120,16 @@ class GridController extends Controller
         if (!$result) {
             return new Response('Not Found', 404);
         }
+
+        //Todo: Yes, it should be removed from here and redone in a more correct way. Refactor it if you have a lot of time
+        $adamasService = new AdamasService();
+        $visits = $adamasService->getPersonVisits($this->getDoctrine(), $result['id']);
+        $result['visit_count'] = $adamasService->getPersonVisitsCount($this->getDoctrine(), $result['id']);
+        $result['visits'] = $visits;
+
+        $result['name'] = $adamasService->formatDate($result['name']);
+        $result['gender'] = $adamasService->formatGender($result['gender']);
+
         if (is_array($result)) {
             foreach ($result as $key => $value) {
                 $responseResult[$this->fromCamelCase($key)] = $value;
