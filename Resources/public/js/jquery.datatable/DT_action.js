@@ -12,7 +12,7 @@ function dtc_grid_tablize(value) {
 
     for (var prop in value) {
         if (value.hasOwnProperty(prop)) {
-            table += "<tr><td>" + stringifyValue(prop) + "</td><td>" + stringifyValue(value[prop]) + "</td></tr>";
+            table += "<tr><td>" + stringifyValue(prop) + "</td><td>" + value[prop] + "</td></tr>";
         }
     }
     table += "</tbody></table>";
