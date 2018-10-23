@@ -118,7 +118,7 @@ class DataTablesRenderer extends AbstractJqueryRenderer
 
         $sortInfo = $this->gridSource->getDefaultSort();
         $defaultSortColumn = isset($sortInfo['column']) ? $sortInfo['column'] : null;
-        $defaultSortDirection = isset($sortInfo['direction']) ? $sortInfo['direction'] : 'ASC';
+        $defaultSortDirection = isset($sortInfo['direction']) ? $sortInfo['direction'] : 'DESC';
         $defaultSortDirection = strtolower($defaultSortDirection);
         $defaultSortColumnIdx = 0;
 
