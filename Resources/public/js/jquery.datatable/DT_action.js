@@ -42,8 +42,8 @@ function dtc_grid_refresh(context) {
     $(context).attr('disabled','disabled');
     $table.find('button').attr('disabled','disabled');
     $table.data('datatable').ajax.reload(function () {
-      $(context).find('i').addClass('dtc-grid-hidden');
-      $(context).attr('disabled',false);
+        $(context).find('i').addClass('dtc-grid-hidden');
+        $(context).attr('disabled',false);
     });
 }
 
