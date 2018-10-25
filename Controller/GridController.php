@@ -55,6 +55,7 @@ class GridController extends Controller
      */
     public function dataAction(Request $request)
     {
+
         $rendererService = $request->get('renderer', 'datatables');
         if ($this->container->has($rendererService)) {
             if (!($rendererService = $this->container->get($rendererService)) instanceof AbstractRenderer) {
@@ -124,13 +125,14 @@ class GridController extends Controller
         //Todo: Yes, it should be removed from here and redone in a more correct way. Refactor it if you have a lot of time
         $adamasService = new AdamasService();
         $visits = $adamasService->getPersonVisits($this->getDoctrine(), $result['id']);
+        $visitsCount = count($visits);
         $date = $adamasService->formatDate($result['name']);
         unset ($result['name']);
         $result['first visit date'] = $date;
         $result['gender'] = $adamasService->formatGender($result['gender']);
         $result['age'] = $adamasService->formatAge($result['age']);
-        $result['visit count'] = $adamasService->getPersonVisitsCount($this->getDoctrine(), $result['id']);
-        $result['visits'] = $visits;
+        $result['visit count'] = $visitsCount;
+        $result['visits'] = implode('<br>', $visits);
 
         ////////
 
