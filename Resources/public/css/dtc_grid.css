@@ -41,3 +41,9 @@ table.dataTable .btn {
 table.dataTable.table-bordered {
     border-collapse: collapse !important;
 }
+
+.paginate_button {
+    margin-right: 3px;
+    margin-left: 3px;
+    font-size: 1.5em;
+}
