@@ -131,14 +131,15 @@ class GridController extends Controller
         $result['first visit date'] = $date;
         $result['gender'] = $adamasService->formatGender($result['gender']);
         $result['age'] = $adamasService->formatAge($result['age']);
+        $result['nation'] =$result['nation'];
         $result['visit count'] = $visitsCount;
         $result['visits'] = implode('<br>', $visits);
-
         ////////
 
         if (is_array($result)) {
             foreach ($result as $key => $value) {
                 $responseResult[$this->fromCamelCase($key)] = $value;
+
             }
         } elseif (method_exists($gridSource, 'getClassMetadata')) {
             $classMetadata = $gridSource->getClassMetadata();
