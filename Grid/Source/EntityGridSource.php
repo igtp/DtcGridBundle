@@ -31,6 +31,8 @@ class EntityGridSource extends AbstractGridSource
 
         $qb = $this->entityManager->createQueryBuilder();
         $orderBy = array();
+
+        $this->orderBy = ['name' => 'DESC'];
         foreach ($this->orderBy as $key => $value) {
             $orderBy[] = "u.{$key} {$value}";
         }
@@ -39,6 +41,7 @@ class EntityGridSource extends AbstractGridSource
             ->add('from', "{$this->entityName} u")
             ->setFirstResult($this->offset)
             ->setMaxResults($this->limit);
+        $qb->andWhere('u.gender is not NULL');
 
         if ($this->orderBy) {
             $orderByStr = implode(',', $orderBy);
