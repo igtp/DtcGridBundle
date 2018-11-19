@@ -2,6 +2,8 @@
 
 namespace Dtc\GridBundle\Controller;
 
+use App\Entity\AdamasPerson;
+use App\Service\AdamasService;
 use Dtc\GridBundle\Grid\Renderer\AbstractRenderer;
 use Dtc\GridBundle\Util\CamelCaseTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -53,6 +55,7 @@ class GridController extends Controller
      */
     public function dataAction(Request $request)
     {
+
         $rendererService = $request->get('renderer', 'datatables');
         if ($this->container->has($rendererService)) {
             if (!($rendererService = $this->container->get($rendererService)) instanceof AbstractRenderer) {
@@ -118,9 +121,25 @@ class GridController extends Controller
         if (!$result) {
             return new Response('Not Found', 404);
         }
+
+        //Todo: Yes, it should be removed from here and redone in a more correct way. Refactor it if you have a lot of time
+        $adamasService = new AdamasService();
+        $visits = $adamasService->getPersonVisits($this->getDoctrine(), $result['id']);
+        $visitsCount = count($visits);
+        $date = $adamasService->formatDate($result['name']);
+        unset ($result['name']);
+        $result['first visit date'] = $date;
+        $result['gender'] = $adamasService->formatGender($result['gender']);
+        $result['age'] = $adamasService->formatAge($result['age']);
+        $result['nation'] =$result['nation'];
+        $result['visit count'] = $visitsCount;
+        $result['visits'] = implode('<br>', $visits);
+        ////////
+
         if (is_array($result)) {
             foreach ($result as $key => $value) {
                 $responseResult[$this->fromCamelCase($key)] = $value;
+
             }
         } elseif (method_exists($gridSource, 'getClassMetadata')) {
             $classMetadata = $gridSource->getClassMetadata();
