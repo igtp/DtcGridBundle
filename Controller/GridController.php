@@ -5,6 +5,7 @@ namespace Dtc\GridBundle\Controller;
 use App\Entity\AdamasPerson;
 use App\Service\AdamasService;
 use Dtc\GridBundle\Grid\Renderer\AbstractRenderer;
+use Dtc\GridBundle\Grid\Source\EntityGridSource;
 use Dtc\GridBundle\Util\CamelCaseTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -113,6 +114,7 @@ class GridController extends Controller
      */
     public function showAction(Request $request)
     {
+        /** @var EntityGridSource $gridSource */
         $gridSource = $this->get('dtc_grid.manager.source')->get($request->get('id'));
         $id = $request->get('identifier');
         $result = $gridSource->find($id);
@@ -124,14 +126,27 @@ class GridController extends Controller
 
         //Todo: Yes, it should be removed from here and redone in a more correct way. Refactor it if you have a lot of time
         $adamasService = new AdamasService();
-        $visits = $adamasService->getPersonVisits($this->getDoctrine(), $result['id']);
-        $visitsCount = count($visits);
-        $date = $adamasService->formatDate($result['name']);
-        unset ($result['name']);
-        $result['first visit date'] = $date;
-        $result['gender'] = $adamasService->formatGender($result['gender']);
-        $result['age'] = $adamasService->formatAge($result['age']);
-        $result['nation'] =$result['nation'];
+
+        $entityName = $request->get('id');
+
+        if($entityName === 'App\Entity\AdamasPerson') {
+            $date = $adamasService->formatDate($result['name']);
+            unset ($result['name']);
+            $result['first visit date'] = $date;
+            $result['gender'] = $adamasService->formatGender($result['gender']);
+            $result['age'] = $adamasService->formatAge($result['age']);
+            $result['nation'] =$result['nation'];
+            $visits = $adamasService->getPersonVisits($this->getDoctrine(), $result['id']);
+            $visitsCount = count($visits);
+
+        } else if($entityName === 'App\Entity\AdamasEmployee') {
+            unset($result['gender']);
+            unset($result['age']);
+            unset($result['nation']);
+            $visits = $adamasService->getEmployeeVisits($this->getDoctrine(), $result['id']);
+            $visitsCount = count($visits);
+        }
+
         $result['visit count'] = $visitsCount;
         $result['visits'] = implode('<br>', $visits);
         ////////
