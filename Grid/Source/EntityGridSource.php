@@ -41,7 +41,12 @@ class EntityGridSource extends AbstractGridSource
             ->add('from', "{$this->entityName} u")
             ->setFirstResult($this->offset)
             ->setMaxResults($this->limit);
-        $qb->andWhere('u.gender is not NULL');
+
+        if($this->entityName === "App\Entity\AdamasPerson") {
+            $qb->andWhere('u.gender is not NULL');
+            $qb->leftJoin('u.employee', 'e');
+            $qb->andWhere('e.id IS NULL');
+        }
 
         if ($this->orderBy) {
             $orderByStr = implode(',', $orderBy);
